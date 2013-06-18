@@ -31,5 +31,11 @@ do
 	echo $time
 	curdir=$basedir$year/$month/$day/
 	mkdir -p $curdir
-	timeout 10m cvlc --quiet $cameraURL --sout "#transcode{acodec="mp3",ab="32",channels="1"}:std{access=file,mux=mp4,dst="$curdir$cameraName\-$time.mp4"}"
+
+	if [[ $cameraURL == v4l* ]]
+	then
+		timeout 10m gst-launch-1.0 v4l2src ! clockoverlay shaded-background="true" time-format="%d/%m/%yy %H:%M:%S" ! omxh264enc ! "video/x-h264,profile=high" ! h264parse ! queue max-size-bytes=10000000 ! matroskamux ! filesink location=$curdir$cameraName\-$time.mkv
+	else	
+		timeout 10m cvlc -quiet $cameraURL --sout "#transcode{acodec="mp3",ab="32",channels="1",vb=512,vcodec=mpgv2}:std{access=file,mux=ts,dst="$curdir$cameraName\-$time.mpg"}"
+	fi
 done
