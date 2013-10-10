@@ -2,9 +2,13 @@
 $root = __DIR__;
 $root = "/var/www/security";
 
-$year = $_GET["year"];
-$month = $_GET["month"];
-$day = $_GET["day"];
+$year = date("y");
+$month = date("m");
+$day = date("d");
+
+if(isset($_GET['year'])) { $year = $_GET["year"]; }
+if(isset($_GET['month'])) { $month = $_GET["month"]; }
+if(isset($_GET['day'])) { $day = $_GET["day"]; }
 
 $path = "/archive/".$year."/".$month."/".$day;
 
@@ -42,32 +46,20 @@ Year: <select name="year">
 <option value="13">2013</option>
 </select><br />
 Month: <select name="month">
-<option value="01">1</option>
-<option value="02">2</option>
-<option value="03">3</option>
-<option value="04">4</option>
-<option value="05">5</option>
-<option value="06">6</option>
-<option value="07">7</option>
-<option value="08">8</option>
-<option value="09">9</option>
-<option value="10">10</option>
-<option value="11">11</option>
-<option value="12">12</option>
+<?php
+for ($i = 1; $i <= 12; $i++) {
+  if ($i == intval($month) ) { echo "<option selected='selected' value=".$i.">".$i."</option>"; }
+  else { echo "<option value=".$i.">".$i."</option>"; }
+}
+?>
 </select><br />
 Day: <select name="day">
-<option value="01">1</option>
-<option value="02">2</option>
-<option value="03">3</option>
-<option value="04">4</option>
-<option value="05">5</option>
-<option value="06">6</option>
-<option value="07">7</option>
-<option value="08">8</option>
-<option value="09">9</option>
-<option value="10">10</option>
-<option value="11">11</option>
-<option value="12">12</option>
+<?php
+for ($i = 1; $i <= 31; $i++) {  
+  if ($i == intval($day) ) { echo "<option selected='selected' value=".$i.">".$i."</option>"; }
+  else { echo "<option value=".$i.">".$i."</option>"; }
+}
+?>
 </select><br />
 
 <input type="submit" value="Refresh">
@@ -77,7 +69,6 @@ Day: <select name="day">
 <table>
 <?php
 $counter = 0;
-echo  $root.$path.'/*';
 foreach (glob($root.$path.'/*') as $file) {
     $file = realpath($file);
     $link = substr($file, strlen($root) + 1);
