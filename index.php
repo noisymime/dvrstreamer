@@ -1,3 +1,7 @@
+<head>
+<link rel="stylesheet" type="text/css" href="screen.css">
+</head>
+
 <?php
 $root = __DIR__;
 $root = "/var/www/security";
@@ -22,6 +26,12 @@ function is_in_dir($file, $directory, $recursive = true, $limit = 1000) {
         $parent = dirname($parent);
     }
     return false;
+}
+
+function human_filesize($bytes, $decimals = 2) {
+    $sz = 'BKMGTP';
+    $factor = floor((strlen($bytes) - 1) / 3);
+    return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
 }
 /*
 $path = null;
@@ -66,8 +76,14 @@ for ($i = 1; $i <= 31; $i++) {
 
 </form>
 
-<table>
+<center>
+<table id="video-table">
 <?php
+
+$date_string = new DateTime($month.'/'.$day.'/'.$year);
+$date_string = date_format($date_string, 'l \t\h\e jS \o\f F');
+echo '<tr><th colspan=3>'.$date_string.'</th></tr>';
+
 $counter = 0;
 foreach (glob($root.$path.'/*') as $file) {
     $file = realpath($file);
@@ -78,14 +94,15 @@ foreach (glob($root.$path.'/*') as $file) {
         $counter = 0;
     }
 
-    echo '<td>';
-    echo '<a href="?file='.urlencode($link).'">'.basename($file).'</a><br />';
+    echo '<td><center>';
+    echo '<a href="/security'.$path.'/'.urlencode(basename($file)).'">'.basename($file).' ('.human_filesize(filesize($file)).')</a><br />';
     echo '<video width="320" height="240" preload="none" controls>'; 
     echo '<source src="/security'.$path.'/'.urlencode(basename($file)).'" type="video/mp4">'.basename($file).'</source>';
     echo '</video>';
-    echo '</td>';
+    echo '</center></td>';
 
     $counter += 1;
 }
 ?>
 </table>
+</center>
