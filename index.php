@@ -14,6 +14,9 @@ if(isset($_GET['year'])) { $year = $_GET["year"]; }
 if(isset($_GET['month'])) { $month = $_GET["month"]; }
 if(isset($_GET['day'])) { $day = $_GET["day"]; }
 
+$month = str_pad($month,2,'0',STR_PAD_LEFT);
+$day = str_pad($day,2,'0',STR_PAD_LEFT);
+
 $path = "/archive/".$year."/".$month."/".$day;
 
 function is_in_dir($file, $directory, $recursive = true, $limit = 1000) {
