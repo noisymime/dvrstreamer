@@ -56,7 +56,7 @@ if (is_file($root.$path)) {
 <form action="index.php" method="GET">
 
 Year: <select name="year">
-<option value="13">2013</option>
+<option value="<?php echo date("y") ?>"><?php echo date("Y") ?></option>
 </select><br />
 Month: <select name="month">
 <?php
